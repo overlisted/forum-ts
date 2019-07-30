@@ -1,4 +1,5 @@
 # Information below is instruction to build my project
+(some folders is git ignored, I guess you can't build)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
