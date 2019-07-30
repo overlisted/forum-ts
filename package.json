@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/express": "^4.17.0",
     "@types/jest": "24.0.15",
     "@types/node": "12.6.8",
+    "@types/pouchdb": "^6.4.0",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.5",
+    "express": "^4.17.1",
+    "pouchdb": "^7.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "typescript": "3.5.3"
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
   },
   "scripts": {
+    "start-server": "ts-node ./server/index.ts",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
