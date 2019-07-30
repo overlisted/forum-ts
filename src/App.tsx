@@ -12,6 +12,13 @@ interface NavbarLink {
   visibleGroups: string[];
 }
 
+interface RouteContentProps { url: string }
+
+interface RouteLinkProps {
+  href: string,
+  displayName: string
+}
+
 // TODO: так как это движок форума, сделать настраиваемым
 let navbarElements: NavbarLink[] = [
   {displayName: "Главная", path: "/", visibleGroups: ["any"]},
@@ -21,34 +28,63 @@ let navbarElements: NavbarLink[] = [
 ];
 
 // TODO: переход на модуль react-router
-let RouteContent: React.FC = function() {
-  if(window.location.pathname === "/") {
-    return <HomePage/>
-  } else if(/^\/thread/.test(window.location.pathname)) {
-    return <ThreadViewPage/>
-  } else if(/^\/personal/.test(window.location.pathname)) {
-    // TODO
-    return null
-  } else if(/^\/admin/.test(window.location.pathname)) {
-    // TODO
-    return null
-  } else if(/^\/groups/.test(window.location.pathname)) {
-    // TODO
-    return null
-  } else {
-    // TODO
-    return(
-      <p>{window.location.href} - адрес не найден, 404</p>
-    )
+let RouteContent: React.FC<RouteContentProps> = function(props) {
+  function updateContent() {
+    if (props.url === "/") {
+      return <HomePage/>
+    } else if (/^\/thread/.test(props.url)) {
+      return <ThreadViewPage/>
+    } else if (/^\/personal/.test(props.url)) {
+      // TODO
+      return null
+    } else if (/^\/admin/.test(props.url)) {
+      // TODO
+      return null
+    } else if (/^\/groups/.test(props.url)) {
+      // TODO
+      return null
+    } else {
+      // TODO
+      return (
+        <p>{window.location.href} - адрес не найден, 404</p>
+      )
+    }
   }
+
+  return updateContent();
+};
+
+let RouteLink: React.FC<RouteLinkProps> = function(props) {
+  function linkClickedEvent(e: string) {
+    console.log('click', e);
+    window.history.pushState({}, '', e);
+
+    const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: e});
+    window.document.dispatchEvent(tsForumEvent);
+  }
+  return <span onClick={() => linkClickedEvent(props.href)}>{props.displayName}</span>
 };
 
 let App: React.FC = function() {
+  const [url, setUrl] = React.useState(window.location.pathname);
+
+  console.log('App url', url);
+
+  React.useMemo(() => {
+    console.log('inside useCallback');
+    //@ts-ignore
+    window.document.addEventListener('tsf-route-change', (e: CustomEvent) => {
+      console.log('on click', e);
+
+      setUrl(e.detail);
+    });
+  }, []);
+
   return (
     <div className="body">
       <Header/>
       <div className="bodyWrapper">
-        <RouteContent/>
+        <RouteContent url={url}/>
         <Sidebar/>
       </div>
     </div>
@@ -75,7 +111,7 @@ let Navbar: React.FC = function() {
             navbarElementKey++;
             return (
               <li key={navbarElementKey}>
-                <a href={element.path}>{element.displayName}</a>
+                <RouteLink href={element.path} displayName={element.displayName}/>
               </li>
             );
           })
