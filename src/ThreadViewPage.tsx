@@ -1,9 +1,8 @@
 import React from "react";
 
 let ThreadViewPage: React.FC = function () {
-  return(
-    <p>тРеД</p>
-  )
+  // TODO
+  return null
 };
 
 export default ThreadViewPage;
