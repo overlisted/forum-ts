@@ -69,7 +69,7 @@ aside {
 
 .content {
   min-height: 800px;
-  background: #1d1d1d;
+  padding: 0;
   margin: 0 15px 0 15px;
   width: 85%;
 }

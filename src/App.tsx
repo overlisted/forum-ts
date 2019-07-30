@@ -21,7 +21,7 @@ let navbarElements: NavbarLink[] = [
 ];
 
 // TODO: переход на модуль react-router
-let GetContent: React.FC = function() {
+let RouteContent: React.FC = function() {
   if(window.location.pathname === "/") {
     return <HomePage/>
   } else if(/^\/thread/.test(window.location.pathname)) {
@@ -30,6 +30,9 @@ let GetContent: React.FC = function() {
     // TODO
     return null
   } else if(/^\/admin/.test(window.location.pathname)) {
+    // TODO
+    return null
+  } else if(/^\/groups/.test(window.location.pathname)) {
     // TODO
     return null
   } else {
@@ -45,7 +48,7 @@ let App: React.FC = function() {
     <div className="body">
       <Header/>
       <div className="bodyWrapper">
-        <GetContent/>
+        <RouteContent/>
         <Sidebar/>
       </div>
     </div>
