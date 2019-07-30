@@ -7,3 +7,7 @@ body * {
   color: #bfbfbf;
 }
 
+ul {
+  list-style-type: none;
+}
+

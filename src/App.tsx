@@ -1,8 +1,9 @@
 import React from 'react';
 // TODO: так как это движок форума, сделать настраиваемым
-import './App.css';
-import HomePage from './HomePage'
-//import logo from '../logo.png';
+import './default-style.css';
+import HomePage from './HomePage';
+import ThreadViewPage from './ThreadViewPage';
+import logo from './logo.png';
 
 interface NavbarLink {
   displayName: string;
@@ -20,12 +21,22 @@ let navbarElements: NavbarLink[] = [
 ];
 
 // TODO: переход на модуль react-router
-let GetBody: React.FC = function() {
-  if(/^\/thread/.test(window.location.pathname)) {
-    //TODO
+let GetContent: React.FC = function() {
+  if(window.location.pathname === "/") {
+    return <HomePage/>
+  } else if(/^\/thread/.test(window.location.pathname)) {
+    return <ThreadViewPage/>
+  } else if(/^\/personal/.test(window.location.pathname)) {
+    // TODO
+    return null
+  } else if(/^\/admin/.test(window.location.pathname)) {
+    // TODO
     return null
   } else {
-    return <HomePage/>
+    // TODO
+    return(
+      <p>{window.location.href} - адрес не найден, 404</p>
+    )
   }
 };
 
@@ -33,9 +44,10 @@ let App: React.FC = function() {
   return (
     <div className="body">
       <Header/>
-      <p>вы дебилы где форум</p>
-      <GetBody/>
-      <Sidebar/>
+      <div className="bodyWrapper">
+        <GetContent/>
+        <Sidebar/>
+      </div>
     </div>
   );
 };
@@ -44,20 +56,22 @@ let Header: React.FC = function() {
   return(
     // TODO: так как это движок форума, сделать настраиваемым
     <header>
-      {/*<img className="logo" src={logo} alt="Логотип"/>*/}
+      <img className="logo" src={logo} alt="Логотип"/>
       <Navbar/>
     </header>
   )
 };
 
 let Navbar: React.FC = function() {
+  let navbarElementKey: number = 0;
   return(
     // TODO: так как это движок форума, сделать настраиваемым
       <ul>
         {
           navbarElements.map(element => {
+            navbarElementKey++;
             return (
-              <li>
+              <li key={navbarElementKey}>
                 <a href={element.path}>{element.displayName}</a>
               </li>
             );
@@ -71,10 +85,12 @@ let Sidebar: React.FC = function() {
   // TODO: так как это движок форума, сделать настраиваемым
   return(
     // TODO: так как это движок форума, сделать настраиваемым
-    <div>
-      <p>Последние статусы</p>
-      <LatestStatuses/>
-    </div>
+    <aside>
+      <div className="statuses">
+        <p>Последние статусы</p>
+        <LatestStatuses/>
+      </div>
+    </aside>
   );
 };
 
