@@ -1,7 +1,7 @@
 import React from 'react';
 // TODO: так как это движок форума, сделать настраиваемым
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import HomePage from './HomePage'
 //import logo from '../logo.png';
 
 interface NavbarLink {
@@ -19,11 +19,22 @@ let navbarElements: NavbarLink[] = [
   {displayName: "Панель управления", path: "/admin", visibleGroups: ["admin"]}
 ];
 
+// TODO: переход на модуль react-router
+let GetBody: React.FC = function() {
+  if(/^\/thread/.test(window.location.pathname)) {
+    //TODO
+    return null
+  } else {
+    return <HomePage/>
+  }
+};
+
 let App: React.FC = function() {
   return (
     <div className="body">
       <Header/>
       <p>вы дебилы где форум</p>
+      <GetBody/>
       <Sidebar/>
     </div>
   );
@@ -42,16 +53,17 @@ let Header: React.FC = function() {
 let Navbar: React.FC = function() {
   return(
     // TODO: так как это движок форума, сделать настраиваемым
-    <ul>
-      {
-        navbarElements.map(element => {
-          return (
-            <li>{element.displayName}</li>
-          );
-        })
-
-      }
-    </ul>
+      <ul>
+        {
+          navbarElements.map(element => {
+            return (
+              <li>
+                <a href={element.path}>{element.displayName}</a>
+              </li>
+            );
+          })
+        }
+      </ul>
   )
 };
 
