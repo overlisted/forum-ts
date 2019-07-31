@@ -2,7 +2,7 @@ import React from "react";
 
 let HomePage: React.FC = function () {
   return(
-    <div className="content">
+    <div className="content home">
       <p>pie</p>
     </div>
   )

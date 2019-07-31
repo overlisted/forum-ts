@@ -15,15 +15,12 @@ code {
     monospace;
 }
 
-a {
-  color: #bfbfbf;
-}
-
 ul {
   list-style-type: none;
   padding: 15px;
   margin: 0;
   display: flex;
+  width: 100%;
 }
 
 li {
@@ -73,4 +70,8 @@ aside {
   padding: 0;
   margin: 0 15px 0 15px;
   width: 85%;
+}
+
+.loginWrapper {
+  text-align: end;
 }

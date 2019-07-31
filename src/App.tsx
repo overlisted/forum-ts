@@ -4,6 +4,7 @@ import './default-style.css';
 import HomePage from './HomePage';
 import ThreadViewPage from './ThreadViewPage';
 import logo from './logo.png';
+import LoginPage from "./LoginPage";
 
 interface NavbarLink {
   displayName: string;
@@ -29,29 +30,25 @@ let navbarElements: NavbarLink[] = [
 
 // TODO: переход на модуль react-router
 let RouteContent: React.FC<RouteContentProps> = function(props) {
-  function updateContent() {
-    if (props.url === "/") {
-      return <HomePage/>
-    } else if (/^\/thread/.test(props.url)) {
-      return <ThreadViewPage/>
-    } else if (/^\/personal/.test(props.url)) {
-      // TODO
-      return null
-    } else if (/^\/admin/.test(props.url)) {
-      // TODO
-      return null
-    } else if (/^\/groups/.test(props.url)) {
-      // TODO
-      return null
-    } else {
-      // TODO
-      return (
-        <p>{window.location.href} - адрес не найден, 404</p>
-      )
-    }
+  if (props.url === '/') {
+    return <HomePage/>
+  } else if (/^\/thread/.test(props.url)) {
+    return <ThreadViewPage/>
+  } else if (/^\/personal/.test(props.url)) {
+    // TODO
+    return null
+  } else if (/^\/admin/.test(props.url)) {
+    // TODO
+    return null
+  } else if (/^\/groups/.test(props.url)) {
+    // TODO
+    return null
+  } else if (/^\/login/.test(props.url)) {
+    return <LoginPage/>
+  } else {
+    // TODO
+    return <PageNotFound/>
   }
-
-  return updateContent();
 };
 
 let RouteLink: React.FC<RouteLinkProps> = function(props) {
@@ -62,6 +59,14 @@ let RouteLink: React.FC<RouteLinkProps> = function(props) {
     window.document.dispatchEvent(tsForumEvent);
   }
   return <span onClick={() => linkClickedEvent(props.href)}>{props.displayName}</span>
+};
+
+let PageNotFound: React.FC = function() {
+  return(
+    <div className="content 404">
+      <p>{window.location.href} - адрес не найден, 404</p>
+    </div>
+  )
 };
 
 let App: React.FC = function() {
@@ -109,6 +114,7 @@ let Navbar: React.FC = function() {
             );
           })
         }
+        <LoginButton/>
       </ul>
   )
 };
@@ -119,7 +125,6 @@ let Sidebar: React.FC = function() {
     // TODO: так как это движок форума, сделать настраиваемым
     <aside>
       <div className="statuses">
-        <p>Последние статусы</p>
         <LatestStatuses/>
       </div>
     </aside>
@@ -128,7 +133,18 @@ let Sidebar: React.FC = function() {
 
 let LatestStatuses: React.FC = function() {
   // TODO
-  return null
+  return(
+    <p>Последние статусы</p>
+  )
+};
+
+let LoginButton: React.FC = function () {
+  // TODO: сделать по куки или как-то так проверку на логин
+  return(
+    <li className="loginWrapper">
+      <RouteLink href="/login" displayName="Войти"/>
+    </li>
+  )
 };
 
 export default App;
