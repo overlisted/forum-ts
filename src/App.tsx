@@ -56,7 +56,6 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
 
 let RouteLink: React.FC<RouteLinkProps> = function(props) {
   function linkClickedEvent(e: string) {
-    console.log('click', e);
     window.history.pushState({}, '', e);
 
     const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: e});
@@ -68,18 +67,12 @@ let RouteLink: React.FC<RouteLinkProps> = function(props) {
 let App: React.FC = function() {
   const [url, setUrl] = React.useState(window.location.pathname);
 
-  console.log('App url', url);
-
   React.useMemo(() => {
-    console.log('inside useCallback');
     //@ts-ignore
     window.document.addEventListener('tsf-route-change', (e: CustomEvent) => {
-      console.log('on click', e);
-
       setUrl(e.detail);
     });
   }, []);
-
   return (
     <div className="body">
       <Header/>
