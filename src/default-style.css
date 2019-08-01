@@ -73,5 +73,5 @@ aside {
 }
 
 .loginWrapper {
-  text-align: end;
+  float: left;
 }
