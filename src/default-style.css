@@ -67,11 +67,23 @@ aside {
 
 .content {
   min-height: 800px;
-  padding: 0;
+  padding: 15px;
   margin: 0 15px 0 15px;
   width: 85%;
 }
 
-.loginWrapper {
-  float: left;
+.login {
+  background: #1d1d1d;
+}
+
+.register {
+  background: #1d1d1d;
+}
+
+.link {
+  text-decoration: underline;
+}
+
+.button {
+  cursor: pointer;
 }
