@@ -4,7 +4,7 @@ import './default-style.css';
 import HomePage from './HomePage';
 import ThreadViewPage from './ThreadViewPage';
 import logo from './logo.png';
-import LoginPage from "./LoginPage";
+import { RegisterPage, LoginPage } from './LoginPage';
 
 interface NavbarLink {
   displayName: string;
@@ -17,7 +17,8 @@ interface RouteContentProps { url: string }
 
 interface RouteLinkProps {
   href: string,
-  displayName: string
+  displayName: string,
+  isButton: boolean
 }
 
 // TODO: так как это движок форума, сделать настраиваемым
@@ -45,6 +46,8 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
     return null
   } else if (/^\/login/.test(props.url)) {
     return <LoginPage/>
+  } else if (/^\/register/.test(props.url)) {
+    return <RegisterPage/>
   } else {
     // TODO
     return <PageNotFound/>
@@ -54,11 +57,15 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
 let RouteLink: React.FC<RouteLinkProps> = function(props) {
   function linkClickedEvent(e: string) {
     window.history.pushState({}, '', e);
-
     const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: e});
     window.document.dispatchEvent(tsForumEvent);
   }
-  return <span onClick={() => linkClickedEvent(props.href)}>{props.displayName}</span>
+
+  if(props.isButton) {
+    return <button onClick={() => linkClickedEvent(props.href)} className="button">{props.displayName}</button>
+  } else {
+    return <span onClick={() => linkClickedEvent(props.href)} className="link">{props.displayName}</span>
+  }
 };
 
 let PageNotFound: React.FC = function() {
@@ -109,7 +116,7 @@ let Navbar: React.FC = function() {
             navbarElementKey++;
             return (
               <li key={navbarElementKey}>
-                <RouteLink href={element.path} displayName={element.displayName}/>
+                <RouteLink href={element.path} displayName={element.displayName} isButton={false}/>
               </li>
             );
           })
@@ -141,10 +148,11 @@ let LatestStatuses: React.FC = function() {
 let LoginButton: React.FC = function () {
   // TODO: сделать по куки или как-то так проверку на логин
   return(
-    <li className="loginWrapper">
-      <RouteLink href="/login" displayName="Войти"/>
+    <li>
+      <RouteLink href="/login" displayName="Войти" isButton={false}/>
     </li>
   )
 };
 
+export { RouteLink };
 export default App;
