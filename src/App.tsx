@@ -13,12 +13,49 @@ interface NavbarLink {
   visibleGroups: string[];
 }
 
+interface AvatarProps { userId: string }
 interface RouteContentProps { url: string }
-
 interface RouteLinkProps {
   href: string,
   displayName: string,
   isButton: boolean
+}
+
+interface MarkdownFormWithToolsProps { onSubmit: Function }
+
+let loadAvatar = function (userId: string) {
+  try {
+    return require("./storage/avatars/" + userId + ".png")
+  } catch(e) {
+    console.log("can't find avatar of " + userId + "catching the exception")
+  }
+};
+
+class Avatar extends React.Component<AvatarProps> {
+  render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+      return(
+        <div className={"avatar"}>
+          <img src={require("./storage/avatars/default.png")} alt={"Аватар пользователя"}/>
+          <img src={loadAvatar(this.props.userId)} alt={""}/>
+        </div>
+      )
+  }
+}
+
+// TODO
+class MarkdownFormWithTools extends React.Component<MarkdownFormWithToolsProps> {
+  constructor(props: MarkdownFormWithToolsProps) {
+    super(props);
+    this.state = {}
+  }
+
+  render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+    return(
+      <form onSubmit={() => this.props.onSubmit()}>
+
+      </form>
+    )
+  }
 }
 
 // TODO: так как это движок форума, сделать настраиваемым
@@ -33,8 +70,10 @@ let navbarElements: NavbarLink[] = [
 let RouteContent: React.FC<RouteContentProps> = function(props) {
   if (props.url === '/') {
     return <HomePage/>
+  } else if (/^\/thread$/.test(props.url)) {
+    return <div className="content 404"><p>В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору.</p></div>
   } else if (/^\/thread/.test(props.url)) {
-    return <ThreadViewPage/>
+    return <ThreadViewPage threadId={JSON.parse(props.url.replace(/^\/thread\//, ""))} />
   } else if (/^\/personal/.test(props.url)) {
     // TODO
     return null
@@ -154,5 +193,5 @@ let LoginButton: React.FC = function () {
   )
 };
 
-export { RouteLink };
+export { RouteLink, Avatar };
 export default App;
