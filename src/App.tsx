@@ -23,11 +23,11 @@ interface RouteLinkProps {
 
 interface MarkdownFormWithToolsProps { onSubmit: Function }
 
-let loadAvatar = function (userId: string) {
+let loadAvatar: any = function(userId: string) {
   try {
     return require("./storage/avatars/" + userId + ".png")
   } catch(e) {
-    console.log("can't find avatar of " + userId + "catching the exception")
+    console.log("can't find avatar of " + userId + " catching the exception")
   }
 };
 
@@ -36,7 +36,7 @@ class Avatar extends React.Component<AvatarProps> {
       return(
         <div className={"avatar"}>
           <img src={require("./storage/avatars/default.png")} alt={"Аватар пользователя"}/>
-          <img src={loadAvatar(this.props.userId)} alt={""}/>
+          <img src={loadAvatar(this.props.userId)} alt={""} style={{marginLeft: "-200px"}}/>
         </div>
       )
   }

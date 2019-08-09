@@ -22,6 +22,7 @@ class ThreadMessage extends React.Component<ThreadGenerationProps> {
     return(
       <div className="thread-message">
         <MessageAuthorPane threadId={this.props.threadId}/>
+        <Markdown source={"## TODO\nСкачивание контента треда из файербазы"}/>
       </div>
     )
   }
