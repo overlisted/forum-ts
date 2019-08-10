@@ -46,17 +46,17 @@ aside {
   margin: 0 15px 0 0;
   width: 15%;
 }
-.bodyWrapper {
+.body-wrapper {
   display: flex;
   justify-content: space-between;
 }
 
-.statuses {
+.latest-statuses {
   padding: 10px;
   font-size: 22px;
 }
 
-.statuses > p {
+.latest-statuses > p {
   margin-top: 0;
   font-weight: 500;
 }
