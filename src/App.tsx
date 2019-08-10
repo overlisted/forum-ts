@@ -127,7 +127,7 @@ let App: React.FC = function() {
   return (
     <div className="body">
       <Header/>
-      <div className="bodyWrapper">
+      <div className="body-wrapper">
         <RouteContent url={url}/>
         <Sidebar/>
       </div>
@@ -170,7 +170,7 @@ let Sidebar: React.FC = function() {
   return(
     // TODO: так как это движок форума, сделать настраиваемым
     <aside>
-      <div className="statuses">
+      <div className="latest-statuses">
         <LatestStatuses/>
       </div>
     </aside>
