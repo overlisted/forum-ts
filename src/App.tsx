@@ -13,6 +13,7 @@ interface NavbarLink {
   visibleGroups: string[];
 }
 
+interface ErrorTextProps { errorCode: string }
 interface AvatarProps { userId: string }
 interface RouteContentProps { url: string }
 interface RouteLinkProps {
@@ -71,9 +72,9 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
   if (props.url === '/') {
     return <HomePage/>
   } else if (/^\/thread$/.test(props.url)) {
-    return <div className="content 404"><p>В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору.</p></div>
+    return <ErrorText errorCode={errorsTSF[1]}/>
   } else if (/^\/thread/.test(props.url)) {
-    return <ThreadViewPage threadId={JSON.parse(props.url.replace(/^\/thread\//, ""))} />
+    return <ThreadViewPage threadId={JSON.parse(props.url.replace(/^\/thread\//, ""))}/>
   } else if (/^\/personal/.test(props.url)) {
     // TODO
     return null
@@ -88,8 +89,7 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
   } else if (/^\/register/.test(props.url)) {
     return <RegisterPage/>
   } else {
-    // TODO
-    return <PageNotFound/>
+    return <ErrorText errorCode={errorsTSF[0]}/>
   }
 };
 
@@ -107,13 +107,26 @@ let RouteLink: React.FC<RouteLinkProps> = function(props) {
   }
 };
 
-let PageNotFound: React.FC = function() {
-  return(
-    <div className="content 404">
-      <p>{window.location.href} - адрес не найден, 404</p>
-    </div>
-  )
-};
+let errorsHTTP = [
+  {HTTP404: "Страница не найдена. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."}
+];
+
+let errorsTSF = [
+  errorsHTTP[0].HTTP404,
+  "В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."
+];
+
+class ErrorText extends React.Component<ErrorTextProps> {
+  render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+    return(
+      <div className="content error">
+        <p>Ошибка!</p>
+        <p>Номер ошибки: {errorsTSF.indexOf(this.props.errorCode) + 1}</p>
+        <p>{this.props.errorCode}</p>
+      </div>
+    )
+  }
+}
 
 let App: React.FC = function() {
   const [url, setUrl] = React.useState(window.location.pathname);
