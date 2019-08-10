@@ -73,8 +73,13 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
     return <HomePage/>
   } else if (/^\/thread$/.test(props.url)) {
     return <ErrorText errorCode={errorsTSF[1]}/>
-  } else if (/^\/thread/.test(props.url)) {
-    return <ThreadViewPage threadId={JSON.parse(props.url.replace(/^\/thread\//, ""))}/>
+  } else if (/^\/thread\//.test(props.url)) {
+    const threadId = parseInt(props.url.replace(/^\/thread\//, ""));
+    if(isFinite(threadId)) {
+      return <ThreadViewPage threadId={threadId}/>
+    } else {
+      return <ErrorText errorCode={errorsTSF[2]}/>
+    }
   } else if (/^\/personal/.test(props.url)) {
     // TODO
     return null
@@ -113,7 +118,8 @@ let errorsHTTP = [
 
 let errorsTSF = [
   errorsHTTP[0].HTTP404,
-  "В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."
+  "В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору.",
+  "В адресной строке Thread ID указан с участием букв, а не цифр. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."
 ];
 
 class ErrorText extends React.Component<ErrorTextProps> {
