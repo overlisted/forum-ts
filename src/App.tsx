@@ -108,7 +108,6 @@ let RouteLink: React.FC<RouteLinkProps> = function(props) {
   }
 
   if(props.isButton) {
-    return null;
     return <button onClick={linkClickedEvent} className="button">{props.displayName}</button>
   } else {
     return <a href={props.href} onClick={linkClickedEvent} className="link">{props.displayName}</a>
