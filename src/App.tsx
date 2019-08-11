@@ -27,9 +27,7 @@ interface MarkdownFormWithToolsProps { onSubmit: Function }
 let loadAvatar: any = function(userId: string) {
   try {
     return require("./storage/avatars/" + userId + ".png")
-  } catch(e) {
-    console.log("can't find avatar of " + userId + " catching the exception")
-  }
+  } catch(e) {}
 };
 
 class Avatar extends React.Component<AvatarProps> {
@@ -99,16 +97,21 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
 };
 
 let RouteLink: React.FC<RouteLinkProps> = function(props) {
-  function linkClickedEvent(e: string) {
-    window.history.pushState({}, '', e);
-    const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: e});
-    window.document.dispatchEvent(tsForumEvent);
+  function linkClickedEvent(e: React.MouseEvent) {
+    e.persist();
+    if (!e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      window.history.pushState({}, '', props.href);
+      const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: props.href});
+      window.document.dispatchEvent(tsForumEvent);
+    }
   }
 
   if(props.isButton) {
-    return <button onClick={() => linkClickedEvent(props.href)} className="button">{props.displayName}</button>
+    return null;
+    return <button onClick={linkClickedEvent} className="button">{props.displayName}</button>
   } else {
-    return <span onClick={() => linkClickedEvent(props.href)} className="link">{props.displayName}</span>
+    return <a href={props.href} onClick={linkClickedEvent} className="link">{props.displayName}</a>
   }
 };
 
