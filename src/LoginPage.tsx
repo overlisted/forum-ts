@@ -1,6 +1,8 @@
 import React from 'react';
 import { RouteLink, routeTo } from "./App";
-import firebase from "firebase";
+import {
+  LoginPageProps
+} from './interfaces';
 
 let RegisterPage: React.FC = function() {
   return(
@@ -19,10 +21,6 @@ let RegisterPage: React.FC = function() {
     </div>
   )
 };
-
-interface LoginPageProps {
-  signIn: (email: string, password: string) => Promise<firebase.auth.UserCredential>
-}
 
 class LoginPage extends React.Component<LoginPageProps> {
   state = {

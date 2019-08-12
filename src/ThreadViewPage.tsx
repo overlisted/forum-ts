@@ -1,11 +1,10 @@
 import React from "react";
 import Markdown from "react-markdown";
 import { Avatar } from "./App";
-
-interface ThreadGenerationProps { threadId: number }
-interface MessageGenerationProps {
-  messageId: number
-}
+import {
+  ThreadGenerationProps,
+  ThreadMessageGenerationProps
+} from './interfaces';
 
 class MessageAuthorPane extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
