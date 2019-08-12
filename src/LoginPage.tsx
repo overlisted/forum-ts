@@ -15,13 +15,9 @@ class RegisterPage extends React.Component<RegisterPageProps> {
   };
 
   handleUsernameChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({username: e.currentTarget.value}) };
-
   handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({email: e.currentTarget.value}) };
-
   handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({password: e.currentTarget.value}) };
-
   handlePasswordRepeatChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({passwordRepeat: e.currentTarget.value}) };
-
   handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -67,7 +63,7 @@ class RegisterPage extends React.Component<RegisterPageProps> {
           <p>Повторите пароль</p>
           <input name="passwordRepeat" type="password" autoComplete="off" required value={this.state.passwordRepeat} onChange={this.handlePasswordRepeatChange}/>
           <p/>
-          <input type="submit" className="button" value="Войти"/>
+          <input type="submit" className="button" value="Зарегистрироваться"/>
         </form>
         <RouteLink href="/login" displayName="Уже зарегистрированы?" isButton={true}/>
       </div>
@@ -82,14 +78,8 @@ class LoginPage extends React.Component<LoginPageProps> {
     error: ''
   };
 
-  handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({email: e.currentTarget.value});
-  };
-
-  handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({password: e.currentTarget.value});
-  };
-
+  handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({email: e.currentTarget.value}) };
+  handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({password: e.currentTarget.value}) };
   handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -119,13 +109,13 @@ class LoginPage extends React.Component<LoginPageProps> {
     return (
       <div className="content login">
         <form onSubmit={this.handleSubmit}>
-          <p className={"auth-error"}>{this.state.error}</p>
           <p>Адрес электронной почты</p>
           <input name="email" type="email" autoComplete="on" required value={this.state.email} onChange={this.handleEmailChange}/>
           <p>Пароль</p>
           <input name="password" type="password" autoComplete="on" required value={this.state.password} onChange={this.handlePasswordChange}/>
           <p/>
           <input type="submit" className="button" value="Войти"/>
+          <span className={"auth-error"}>{this.state.error}</span>
         </form>
         <RouteLink href="/register" displayName="Еще не зарегистрированы?" isButton={true}/>
       </div>

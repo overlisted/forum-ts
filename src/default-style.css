@@ -46,6 +46,11 @@ aside {
   margin: 0 15px 0 0;
   width: 15%;
 }
+
+p {
+  margin: 0;
+}
+
 .body-wrapper {
   display: flex;
   justify-content: space-between;
@@ -101,4 +106,15 @@ aside {
 
 .error p {
   margin: 0;
+}
+
+.auth-error {
+  margin: 5px;
+  font-size: 16px;
+  color: #cd0000;
+  font-style: italic;
+}
+
+.register p, .login p {
+  margin-bottom: 5px;
 }
