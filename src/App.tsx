@@ -8,6 +8,15 @@ import { RegisterPage, LoginPage } from './LoginPage';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
+import {
+  AvatarProps,
+  MarkdownFormWithToolsProps,
+  HeaderProps,
+  ErrorTextProps,
+  RouteContentProps,
+  RouteLinkProps,
+  NavbarLink
+} from './interfaces'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXfBSMI1Hh3xOXBeEA-E0BjYeFm3xo_IM",
@@ -29,25 +38,6 @@ export function routeTo(href: string) {
 
 // @ts-ignore
 window.firebase = firebase;
-
-interface NavbarLink {
-  displayName: string;
-  path: string;
-  // TODO
-  visibleGroups: string[];
-}
-
-interface HeaderProps { user: firebase.User | null }
-interface ErrorTextProps { errorCode: string }
-interface AvatarProps { userId: string }
-interface RouteContentProps { url: string }
-interface RouteLinkProps {
-  href: string,
-  displayName: string,
-  isButton: boolean
-}
-
-interface MarkdownFormWithToolsProps { onSubmit: Function }
 
 let loadAvatar: any = function(userId: string) {
   try {
