@@ -158,6 +158,7 @@ class ErrorText extends React.Component<ErrorTextProps> {
 }
 
 let App: React.FC = function() {
+  const [loading, setLoading] = React.useState(true);
   const [url, setUrl] = React.useState(window.location.pathname);
   const [user, setUser] = React.useState<firebase.User | null>(firebase.auth().currentUser);
 
@@ -170,22 +171,23 @@ let App: React.FC = function() {
 
   React.useMemo(() => {
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        console.log('user is signed in');
-      } else {
-        console.log('user is signed out');
-      }
+      if (loading) setLoading(false);
       setUser(user);
     });
-  }, []);
+  }, [loading]);
 
   return (
     <div className="body">
-      <Header user={user}/>
-      <div className="body-wrapper">
-        <RouteContent url={url}/>
-        <Sidebar/>
-      </div>
+      {loading && 'Loading...'}
+      {!loading &&
+        <>
+          <Header user={user}/>
+          <div className="body-wrapper">
+              <RouteContent url={url}/>
+              <Sidebar/>
+          </div>
+        </>
+      }
     </div>
   );
 };
