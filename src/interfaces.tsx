@@ -1,5 +1,6 @@
 import firebase from "firebase";
 
+export interface RegisterPageProps { createUser: (email: string, password: string) => Promise<firebase.auth.UserCredential> }
 export interface MarkdownFormWithToolsProps { onSubmit: Function }
 export interface LoginPageProps { signIn: (email: string, password: string) => Promise<firebase.auth.UserCredential> }
 export interface ThreadGenerationProps { threadId: number }

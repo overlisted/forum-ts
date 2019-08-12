@@ -84,6 +84,10 @@ function signIn(email: string, password: string) {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 }
 
+function createUser(email: string, password: string) {
+  return firebase.auth().createUserWithEmailAndPassword(email, password)
+}
+
 // TODO: переход на модуль react-router
 let RouteContent: React.FC<RouteContentProps> = function(props) {
   if (props.url === '/') {
@@ -109,7 +113,7 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
   } else if (/^\/login/.test(props.url)) {
     return <LoginPage signIn={signIn}/>
   } else if (/^\/register/.test(props.url)) {
-    return <RegisterPage/>
+    return <RegisterPage createUser={createUser}/>
   } else {
     return <ErrorText errorCode={errorsTSF[0]}/>
   }
@@ -175,7 +179,6 @@ let App: React.FC = function() {
     });
   }, []);
 
-
   return (
     <div className="body">
       <Header user={user}/>
@@ -213,7 +216,7 @@ let Navbar: React.FC<HeaderProps> = function(props) {
         })
       }
       {!props.user && <LoginButton/>}
-      {props.user && <div>{props.user.email}</div>}
+      {props.user && <div>{props.user.displayName}</div>}
     </ul>
   )
 };
@@ -238,7 +241,6 @@ let LatestStatuses: React.FC = function() {
 };
 
 let LoginButton: React.FC = function () {
-  // TODO: сделать по куки или как-то так проверку на логин
   return(
     <li>
       <RouteLink href="/login" displayName={"Войти"} isButton={false}/>
