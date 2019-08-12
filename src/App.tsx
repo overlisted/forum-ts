@@ -5,6 +5,30 @@ import HomePage from './HomePage';
 import ThreadViewPage from './ThreadViewPage';
 import logo from './logo.png';
 import { RegisterPage, LoginPage } from './LoginPage';
+import firebase from "firebase/app";
+import "firebase/auth";
+import 'firebase/firestore';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDXfBSMI1Hh3xOXBeEA-E0BjYeFm3xo_IM",
+  authDomain: "forum-ts.firebaseapp.com",
+  databaseURL: "https://forum-ts.firebaseio.com",
+  projectId: "forum-ts",
+  storageBucket: "forum-ts.appspot.com",
+  messagingSenderId: "149363423360",
+  appId: "1:149363423360:web:db465a8af13e0eef"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+export function routeTo(href: string) {
+  window.history.pushState({}, '', href);
+  const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: href});
+  window.document.dispatchEvent(tsForumEvent);
+}
+
+// @ts-ignore
+window.firebase = firebase;
 
 interface NavbarLink {
   displayName: string;
@@ -13,6 +37,7 @@ interface NavbarLink {
   visibleGroups: string[];
 }
 
+interface HeaderProps { user: firebase.User | null }
 interface ErrorTextProps { errorCode: string }
 interface AvatarProps { userId: string }
 interface RouteContentProps { url: string }
@@ -65,6 +90,10 @@ let navbarElements: NavbarLink[] = [
   {displayName: "Панель управления", path: "/admin", visibleGroups: ["admin"]}
 ];
 
+function signIn(email: string, password: string) {
+  return firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
 // TODO: переход на модуль react-router
 let RouteContent: React.FC<RouteContentProps> = function(props) {
   if (props.url === '/') {
@@ -88,7 +117,7 @@ let RouteContent: React.FC<RouteContentProps> = function(props) {
     // TODO
     return null
   } else if (/^\/login/.test(props.url)) {
-    return <LoginPage/>
+    return <LoginPage signIn={signIn}/>
   } else if (/^\/register/.test(props.url)) {
     return <RegisterPage/>
   } else {
@@ -101,9 +130,7 @@ let RouteLink: React.FC<RouteLinkProps> = function(props) {
     e.persist();
     if (!e.ctrlKey && !e.metaKey) {
       e.preventDefault();
-      window.history.pushState({}, '', props.href);
-      const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: props.href});
-      window.document.dispatchEvent(tsForumEvent);
+      routeTo(props.href);
     }
   }
 
@@ -138,6 +165,7 @@ class ErrorText extends React.Component<ErrorTextProps> {
 
 let App: React.FC = function() {
   const [url, setUrl] = React.useState(window.location.pathname);
+  const [user, setUser] = React.useState<firebase.User | null>(firebase.auth().currentUser);
 
   React.useMemo(() => {
     //@ts-ignore
@@ -145,9 +173,22 @@ let App: React.FC = function() {
       setUrl(e.detail);
     });
   }, []);
+
+  React.useMemo(() => {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        console.log('user is signed in');
+      } else {
+        console.log('user is signed out');
+      }
+      setUser(user);
+    });
+  }, []);
+
+
   return (
     <div className="body">
-      <Header/>
+      <Header user={user}/>
       <div className="body-wrapper">
         <RouteContent url={url}/>
         <Sidebar/>
@@ -156,33 +197,34 @@ let App: React.FC = function() {
   );
 };
 
-let Header: React.FC = function() {
+let Header: React.FC<HeaderProps> = function(props) {
   return(
     // TODO: так как это движок форума, сделать настраиваемым
     <header>
       <img className="logo" src={logo} alt="Логотип"/>
-      <Navbar/>
+      <Navbar user={props.user}/>
     </header>
   )
 };
 
-let Navbar: React.FC = function() {
+let Navbar: React.FC<HeaderProps> = function(props) {
   let navbarElementKey: number = 0;
   return(
     // TODO: так как это движок форума, сделать настраиваемым
-      <ul>
-        {
-          navbarElements.map(element => {
-            navbarElementKey++;
-            return (
-              <li key={navbarElementKey}>
-                <RouteLink href={element.path} displayName={element.displayName} isButton={false}/>
-              </li>
-            );
-          })
-        }
-        <LoginButton/>
-      </ul>
+    <ul>
+      {
+        navbarElements.map(element => {
+          navbarElementKey++;
+          return (
+            <li key={navbarElementKey}>
+              <RouteLink href={element.path} displayName={element.displayName} isButton={false}/>
+            </li>
+          );
+        })
+      }
+      {!props.user && <LoginButton/>}
+      {props.user && <div>{props.user.email}</div>}
+    </ul>
   )
 };
 
@@ -209,7 +251,7 @@ let LoginButton: React.FC = function () {
   // TODO: сделать по куки или как-то так проверку на логин
   return(
     <li>
-      <RouteLink href="/login" displayName="Войти" isButton={false}/>
+      <RouteLink href="/login" displayName={"Войти"} isButton={false}/>
     </li>
   )
 };
