@@ -1,7 +1,7 @@
 import React from 'react';
 // TODO: так как это движок форума, сделать настраиваемым
 import './default-style.css';
-import HomePage from './HomePage';
+import HomePage from './components/HomePage';
 import ThreadViewPage from './ThreadViewPage';
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -9,18 +9,17 @@ import 'firebase/firestore';
 import 'firebase/storage'
 import autobind from 'autobind-decorator';
 import {
-  AvatarProps,
   BoxProps,
-  ErrorTextProps,
   MarkdownFormWithToolsProps,
   NavbarLink,
-  RouteContentProps,
-  RouteLinkProps,
   Renderable,
   EventRowProps,
   RegisterPageProps,
   LoginPageProps
 } from './types'
+import ContentRouter from "./router";
+import Error from './components/Error';
+import { go, Link} from './router'
 
 firebase.initializeApp({
   apiKey: "AIzaSyDXfBSMI1Hh3xOXBeEA-E0BjYeFm3xo_IM",
@@ -31,12 +30,6 @@ firebase.initializeApp({
   messagingSenderId: "149363423360",
   appId: "1:149363423360:web:db465a8af13e0eef"
 });
-
-export function routeTo(href: string) {
-  window.history.pushState({}, '', href);
-  const tsForumEvent: CustomEvent = new CustomEvent('tsf-route-change', {detail: href});
-  window.document.dispatchEvent(tsForumEvent);
-}
 
 // @ts-ignore
 window.firebase = firebase;
@@ -73,38 +66,6 @@ function signIn(email: string, password: string) {
 function createUser(email: string, password: string) {
   return firebase.auth().createUserWithEmailAndPassword(email, password)
 }
-
-class RouteContent extends React.Component<RouteContentProps> {
-  render(): Renderable {
-    if (this.props.url === '/') {
-      return <HomePage/>
-    } else if (/^\/thread$/.test(this.props.url)) {
-      return <ErrorText errorCode={errorsTSF[1]}/>
-    } else if (/^\/thread\//.test(this.props.url)) {
-      const threadId = parseInt(this.props.url.replace(/^\/thread\//, ""));
-      if (isFinite(threadId)) {
-        return <ThreadViewPage threadId={threadId}/>
-      } else {
-        return <ErrorText errorCode={errorsTSF[2]}/>
-      }
-    } else if (/^\/personal/.test(this.props.url)) {
-      // TODO
-      return null
-    } else if (/^\/admin/.test(this.props.url)) {
-      // TODO
-      return null
-    } else if (/^\/groups/.test(this.props.url)) {
-      // TODO
-      return null
-    } else if (/^\/login/.test(this.props.url)) {
-      return <LoginForm signIn={signIn}/>
-    } else if (/^\/register/.test(this.props.url)) {
-      return <RegisterForm createUser={createUser}/>
-    } else {
-      return <ErrorText errorCode={errorsTSF[0]}/>
-    }
-  }
-};
 
 class ThreadRow extends React.Component{
   render(): Renderable {
@@ -150,51 +111,26 @@ class Box extends React.Component<BoxProps> {
   }
 }
 
-class RouteLink extends React.Component<RouteLinkProps> {
-  linkClickedEvent(e: React.MouseEvent): void {
-    e.persist();
-    if (!e.ctrlKey && !e.metaKey) {
-      e.preventDefault();
-      routeTo(this.props.href);
-    }
-  }
-
-  render(): Renderable {
-    if (this.props.isButton) {
-      return <button onClick={this.linkClickedEvent} className="button">{this.props.children}</button>
-    } else {
-      return <a href={this.props.href} onClick={this.linkClickedEvent} className={"link " + this.props.className}>{this.props.children}</a>
-    }
-  }
-}
-
-const errorsHTTP = [
-  {HTTP404: "Страница не найдена. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."}
-];
-
-const errorsTSF = [
-  errorsHTTP[0].HTTP404,
-  "В адресной строке не указан Thread ID. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору.",
-  "В адресной строке Thread ID указан с участием букв, а не цифр. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."
-];
-
-class ErrorText extends React.Component<ErrorTextProps> {
-  render(): Renderable {
-    return(
-      <div className="content error">
-        <p>Ошибка!</p>
-        <p>Номер ошибки: {errorsTSF.indexOf(this.props.errorCode) + 1}</p>
-        <p>{this.props.errorCode}</p>
-      </div>
-    )
-  }
-}
-
 const UserContext = React.createContext<firebase.User | null>(null);
 class App extends React.Component {
+  constructor(props: any) {
+    super(props);
+    ContentRouter.addRoutes([
+      {url: /^\/thread$/, renderComponent: () => <Error errorCode={1}/>},
+      {url: /^\/thread\//, renderComponent: () => {
+          const threadId = parseInt(this.state.url.replace(/^\/thread\//, ""));
+          if (isFinite(threadId)) {
+            return <ThreadViewPage threadId={threadId}/>
+          } else {
+            return <Error errorCode={2}/>
+          }
+        }},
+    ]);
+  }
+
   state = {
     loading: true,
-    url: '',
+    url: window.location.pathname,
     user: null
   };
 
@@ -220,7 +156,7 @@ class App extends React.Component {
             <Header/>
             <div className="body-wrapper">
               <div className={"main-boxes-column"}>
-              <RouteContent url={this.state.url}/>
+              <ContentRouter url={this.state.url}/>
               </div>
               <Sidebar/>
             </div>
@@ -284,7 +220,7 @@ class Navbar extends React.Component {
                 <li key={navbarElements.indexOf(element)}>
                   <div className={"active-link-line hidden-" + isHidden}/>
                   <div className={"active-link-" + !isHidden + " navbar-hidden-" + this.state.hide}>
-                    <RouteLink href={element.path} className={"navbar-link"}>{element.displayName}</RouteLink>
+                    <Link href={element.path} className={"navbar-link"}>{element.displayName}</Link>
                   </div>
                 </li>
               );
@@ -350,7 +286,6 @@ class RegisterForm extends React.Component<RegisterPageProps> {
           displayName: this.state.username,
           photoURL: "" // TODO: на бэкэнде возвращать аватарки
         });
-        routeTo('/');
       }
     } catch(error) {
       this.clearErrors();
@@ -436,7 +371,7 @@ class LoginForm extends React.Component<LoginPageProps> {
         <p className={"auth-error"}>{this.state.error.password}</p>
         <input type="submit" className="button" value="Войти"/>
 
-        <RouteLink href={"/forgot"} className={"forgot-password-link"}>Забыли пароль?</RouteLink>
+        <Link href={"/forgot"} className={"forgot-password-link"}>Забыли пароль?</Link>
       </form>
     );
   }
@@ -464,11 +399,11 @@ class PersonalPanel extends React.Component {
               <Box isAsideBox={true} title={"Личный кабинет"} className={"personal-panel"}>
                 <div className={"personal-panel-title"}>
                   <img src={context.photoURL ? context.photoURL : undefined} className={"personal-panel-img"} alt={""}/>
-                  <RouteLink href={"/user/" + context.displayName} className={"personal-panel-username"}>{context.displayName}</RouteLink>
+                  <Link href={"/user/" + context.displayName} className={"personal-panel-username"}>{context.displayName}</Link>
                 </div>
-                <RouteLink href={"/settings"}>Настройки аккаунта</RouteLink>
-                <RouteLink href={"/user/" + context.displayName + "/followers" }>Подписчики</RouteLink>
-                <RouteLink href={"/messages" }>Сообщения</RouteLink>
+                <Link href={"/settings"}>Настройки аккаунта</Link>
+                <Link href={"/user/" + context.displayName + "/followers" }>Подписчики</Link>
+                <Link href={"/messages" }>Сообщения</Link>
                 <p onClick={() => firebase.auth().signOut()} className={"link"}>Выйти</p>
               </Box>
             )
@@ -479,5 +414,5 @@ class PersonalPanel extends React.Component {
   }
 }
 
-export { RouteLink, Box, EventRow };
+export { Box, EventRow };
 export default App;

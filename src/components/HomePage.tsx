@@ -1,8 +1,8 @@
 import React from "react";
-import {Box, EventRow} from "./App";
+import {Box, EventRow} from "../App";
 import {
   Renderable
-} from "./types";
+} from "../types";
 
 class HomePage extends React.Component {
   render(): Renderable {
