@@ -8,10 +8,14 @@ export interface LoginPageProps { signIn: (email: string, password: string) => P
 export interface ThreadGenerationProps { threadId: number }
 export interface ThreadMessageGenerationProps { messageId: number }
 export interface HeaderProps { user: firebase.User | null }
-export interface ErrorTextProps { errorCode: string }
+export interface ErrorTextProps { errorCode: number }
 export interface AvatarProps extends ClassNameable { userId: string }
-export interface RouteContentProps { url: string }
+export interface ContentRouterProps { url: string }
 export interface ClassNameable { className?: string }
+export interface RouteRegisterable {
+  url: RegExp,
+  renderComponent: () => React.ReactNode
+}
 export interface BoxProps extends ClassNameable {
   title: string,
   isAsideBox: boolean,
