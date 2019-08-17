@@ -1,54 +1,81 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  margin: auto;
+  width: 1378px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #363636;
-  color: #bfbfbf;
-  font-size: 18px;
+  color: #000;
+  /*background-image: url(./storage/defaultBackground.png);*/
+  background-color: #dcdcdc;
+  background-attachment: fixed;
+  background-position: bottom;
+  background-size: cover;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 ul {
   list-style-type: none;
-  padding: 15px;
-  margin: 0;
   display: flex;
-  width: 100%;
+  margin: auto;
+  width: 1378px;
+  padding-inline-start: 0;
 }
 
-li {
+li > div > a {
   margin-right: 10px;
   cursor: pointer;
-}
-
-header {
-  margin: 15px;
-  padding: 5px 5px 5px 10px;
-  background: #1d1d1d;
-  display: flex;
-}
-
-header * {
-  font-weight: 500;
+  font-size: 31px;
+  color: #007ACD;
 }
 
 aside {
-  background: #1d1d1d;
-  padding: 5px;
-  min-height: 800px;
-  margin: 0 15px 0 0;
-  width: 15%;
+  margin: 0 0 0 50px;
+  width: 308px;
 }
 
 p {
   margin: 0;
+}
+
+nav {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+form {
+  padding: 7px 13px 13px 13px;
+}
+
+form > p {
+  font-size: 18px;
+}
+
+input:not([type="submit"]) {
+  border: 2px solid #BEBEBE;
+  border-radius: 2px;
+  width: Calc(100% - 8px);
+  height: 19px;
+  font-size: 16px;
+  padding: 2px;
+}
+
+input[type="submit"] {
+  background: #E5E5E5;
+  border: none;
+  border-radius: 2px;
+  width: 100%;
+  height: 34px;
+  font-size: 23px;
+  color: #007ACD;
+  font-weight: bold;
+  margin: 6px 0 0 0;
 }
 
 .body-wrapper {
@@ -57,8 +84,7 @@ p {
 }
 
 .latest-statuses {
-  padding: 10px;
-  font-size: 22px;
+  height: 600px;
 }
 
 .latest-statuses > p {
@@ -66,15 +92,13 @@ p {
   font-weight: 500;
 }
 
-.logo {
-  height: 50px;
-}
-
-.content {
-  min-height: 200px;
-  padding: 15px;
-  margin: 0 15px 0 15px;
-  width: 85%;
+.logo-text {
+  font-family: 'Nirmala UI', sans-serif;
+  font-size: 76px;
+  letter-spacing: -2px;
+  color: #007ACD;
+  font-weight: 100;
+  margin: 45px 0 0 0;
 }
 
 .login {
@@ -85,9 +109,13 @@ p {
   background: #1d1d1d;
 }
 
+.navbar-line {
+  background-color: #007ACD;
+  height: 5px;
+}
+
 .link {
-  text-decoration: underline;
-  color: #bfbfbf;
+  text-decoration: none;
 }
 
 .button {
@@ -109,7 +137,6 @@ p {
 }
 
 .auth-error {
-  margin: 5px;
   font-size: 16px;
   color: #cd0000;
   font-style: italic;
@@ -117,4 +144,88 @@ p {
 
 .register p, .login p {
   margin-bottom: 5px;
+}
+
+.active-link-line {
+  width: calc(100% - 10px);
+  height: 5px;
+  margin: -5px 0 0 0;
+  background: #FFF;
+}
+
+.hidden-true {
+  display: none;
+}
+
+.active-link-true > a {
+  color: #FFF;
+}
+
+.box {
+  width: 100%;
+  margin: 0 0 50px 0;
+}
+
+.box-title {
+  background-color: #007ACD;
+  width: 100%;
+  color: #FFF;
+  border-radius: 5px 5px 0 0;
+  font-size: 28px;
+  padding: 11px;
+  line-height: 26px;
+}
+
+.box-title-wrapper {
+  display: flex;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+}
+
+.box-contents.aside-box-false {
+  width: 1010px;
+  background: #FFF;
+  margin: 0 5px 0 5px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 0 0 5px 5px;
+}
+
+.box-contents.aside-box-true {
+  width: Calc(100% - 10px);
+  background: #FFF;
+  margin: 0 5px 0 5px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 0 0 5px 5px;
+}
+
+.thread-row:nth-child(2n) {
+  background-color: #F1F1F1;
+}
+
+.thread-row {
+  height: 69px;
+  padding: 13px;
+}
+
+.event-row-title {
+  font-size: 16px;
+}
+
+.event-row-event-sample {
+  font-size: 18px;
+  overflow-x: hidden;
+  height: 48px;
+}
+
+.navbar-hidden-true a {
+  color: rgba(255, 255, 255, 0);
+  cursor: default;
+}
+
+.forgot-password-link {
+  color: #0A7CAA;
+  font-style: italic;
+}
+
+.link:hover {
+  text-decoration: underline;
 }
