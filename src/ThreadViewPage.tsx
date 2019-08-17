@@ -1,21 +1,22 @@
 import React from "react";
 import Markdown from "react-markdown";
-import { Avatar } from "./App";
 import {
   ThreadGenerationProps,
   ThreadMessageGenerationProps
 } from './types';
 
+/** @deprecated */
 class MessageAuthorPane extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return(
       <div className="message-author-pane">
-        <Avatar userId={/*TODO*/ JSON.stringify(-1)}/>
+        {/*<Avatar userId={JSON.stringify(-1)}/>*/}
       </div>
     )
   }
 }
 
+/** @deprecated */
 class ThreadMessage extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return(
@@ -27,6 +28,7 @@ class ThreadMessage extends React.Component<ThreadGenerationProps> {
   }
 }
 
+/** @deprecated */
 class ThreadTitle extends React.Component<ThreadGenerationProps> {
   render() {
     return (
@@ -35,6 +37,7 @@ class ThreadTitle extends React.Component<ThreadGenerationProps> {
   }
 }
 
+/** @deprecated */
 class ThreadMessagesGenerator extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     let allMessages = <ThreadMessage threadId={this.props.threadId}/>;
@@ -43,6 +46,7 @@ class ThreadMessagesGenerator extends React.Component<ThreadGenerationProps> {
   }
 }
 
+/** @deprecated */
 class ThreadMessageForm extends React.Component<ThreadGenerationProps> {
   render() {
     return (
@@ -53,6 +57,7 @@ class ThreadMessageForm extends React.Component<ThreadGenerationProps> {
   }
 }
 
+/** @deprecated */
 class ThreadViewPage extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return(

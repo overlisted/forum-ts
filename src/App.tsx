@@ -6,6 +6,7 @@ import ThreadViewPage from './ThreadViewPage';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
+import 'firebase/storage'
 import autobind from 'autobind-decorator';
 import {
   AvatarProps,
@@ -41,23 +42,6 @@ export function routeTo(href: string) {
 
 // @ts-ignore
 window.firebase = firebase;
-
-function loadAvatar(userId: string): any {
-  try {
-    return require("./storage/avatars/" + userId + ".png")
-  } catch(e) {}
-}
-
-class Avatar extends React.Component<AvatarProps> {
-  render(): Renderable {
-    return(
-      <div className={"avatar"}>
-        <img src={require("./storage/avatars/default.png")} alt={"Аватар пользователя"}/>
-        <img src={loadAvatar(this.props.userId)} alt={""} style={{marginLeft: "-200px"}}/>
-      </div>
-    )
-  }
-}
 
 // TODO
 class MarkdownFormWithTools extends React.Component<MarkdownFormWithToolsProps> {
@@ -155,12 +139,12 @@ class EventRow extends React.Component<EventRowProps> {
 class Box extends React.Component<BoxProps> {
   render(): Renderable {
     return(
-      <div className="box">
+      <div className={"box"}>
         <div className={"box-title-wrapper"}>
           <p className="box-title">{this.props.title}</p>
         </div>
 
-        <div className={"box-contents aside-box-" + this.props.isAsideBox}>
+        <div className={"box-contents " + this.props.className + " aside-box-" + this.props.isAsideBox}>
           {this.props.children}
         </div>
       </div>
@@ -299,7 +283,7 @@ class Navbar extends React.Component {
                 <li key={navbarElements.indexOf(element)}>
                   <div className={"active-link-line hidden-" + isHidden}/>
                   <div className={"active-link-" + !isHidden + " navbar-hidden-" + this.state.hide}>
-                    <RouteLink href={element.path} isButton={false}>{element.displayName}</RouteLink>
+                    <RouteLink href={element.path} className={"navbar-link"}>{element.displayName}</RouteLink>
                   </div>
                 </li>
               );
@@ -317,7 +301,7 @@ class Sidebar extends React.Component {
     return(
     // TODO: так как это движок форума, сделать настраиваемым
       <aside>
-        <AccountPanel/>
+        <PersonalPanel/>
         <Box title={"Последние статусы"} isAsideBox={true}>
           <div className={"aside-content latest-statuses"}>
 
@@ -347,17 +331,24 @@ class RegisterForm extends React.Component<RegisterPageProps> {
   handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({email: e.currentTarget.value}) };
   handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({password: e.currentTarget.value}) };
   handlePasswordRepeatChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({passwordRepeat: e.currentTarget.value}) };
+
   handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      if(this.state.password !== this.state.passwordRepeat) {
+      if(this.state.username.length > 14) {
+        this.clearErrors();
+        this.setState({error: {username: 'Максимальная длинна имени - 14 символов'}});
+      } else if(this.state.password !== this.state.passwordRepeat) {
         this.clearErrors();
         this.setState({error: {passwordRepeat: 'Пароли не совпадают.'}});
       } else {
         let newRegisteredUser = await this.props.createUser(this.state.email, this.state.password);
         // некий "конструктор" пользователя после регистрации
-        if(newRegisteredUser.user) await newRegisteredUser.user.updateProfile({displayName: this.state.username});
+        if(newRegisteredUser.user) await newRegisteredUser.user.updateProfile({
+          displayName: this.state.username,
+          photoURL: "" // TODO: на бэкэнде возвращать аватарки
+        });
         routeTo('/');
       }
     } catch(error) {
@@ -378,13 +369,13 @@ class RegisterForm extends React.Component<RegisterPageProps> {
     return (
       <form onSubmit={this.handleSubmit}>
         <p>Имя пользователя</p>
-        <input name="username" autoComplete="on" required value={this.state.username} onChange={this.handleUsernameChange}/>
+        <input name="username" autoComplete="off" required value={this.state.username} onChange={this.handleUsernameChange}/>
         <p className={"auth-error"}>{this.state.error.username}</p>
         <p>Адрес электронной почты</p>
-        <input name="email" type="email" autoComplete="on" required value={this.state.email} onChange={this.handleEmailChange}/>
+        <input name="email" type="email" autoComplete="off" required value={this.state.email} onChange={this.handleEmailChange}/>
         <p className={"auth-error"}>{this.state.error.email}</p>
         <p>Пароль</p>
-        <input name="password" type="password" autoComplete="on" required value={this.state.password} onChange={this.handlePasswordChange}/>
+        <input name="password" type="password" autoComplete="off" required value={this.state.password} onChange={this.handlePasswordChange}/>
         <p className={"auth-error"}>{this.state.error.password}</p>
         <p>Повторите пароль</p>
         <input name="passwordRepeat" type="password" autoComplete="off" required value={this.state.passwordRepeat} onChange={this.handlePasswordRepeatChange}/>
@@ -405,7 +396,6 @@ class LoginForm extends React.Component<LoginPageProps> {
     }
   };
 
-  clearState = (): void => { this.setState({email: '', password: '', error: {password: '', email: ''}}) };
   clearErrors = (): void => { this.setState({error: {password: '', email: ''}}); };
   handleEmailChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({email: e.currentTarget.value}) };
   handlePasswordChange = (e: React.FormEvent<HTMLInputElement>) => { this.setState({password: e.currentTarget.value}) };
@@ -429,7 +419,7 @@ class LoginForm extends React.Component<LoginPageProps> {
       } else if(error.code === 'auth/user-not-found') {
         this.setState({error: 'Пользователь не зарегистрирован.'})
       } else {
-        return error.message;
+        console.log(error.code, error.message);
       }
     }
   };
@@ -445,13 +435,13 @@ class LoginForm extends React.Component<LoginPageProps> {
         <p className={"auth-error"}>{this.state.error.password}</p>
         <input type="submit" className="button" value="Войти"/>
 
-        <RouteLink href={"/forgot"} isButton={false} className={"forgot-password-link"}>Забыли пароль?</RouteLink>
+        <RouteLink href={"/forgot"} className={"forgot-password-link"}>Забыли пароль?</RouteLink>
       </form>
     );
   }
 }
 
-class AccountPanel extends React.Component {
+class PersonalPanel extends React.Component {
   render(): Renderable {
     return(
       <UserContext.Consumer>
@@ -470,8 +460,15 @@ class AccountPanel extends React.Component {
             )
           } else {
             return(
-              <Box isAsideBox={true} title={"Личный кабинет"}>
-                <p>work in progress</p>
+              <Box isAsideBox={true} title={"Личный кабинет"} className={"personal-panel"}>
+                <div className={"personal-panel-title"}>
+                  <img src={context.photoURL ? context.photoURL : undefined} className={"personal-panel-img"} alt={""}/>
+                  <RouteLink href={"/user/" + context.displayName} className={"personal-panel-username"}>{context.displayName}</RouteLink>
+                </div>
+                <RouteLink href={"/settings"}>Настройки аккаунта</RouteLink>
+                <RouteLink href={"/user/" + context.displayName + "/followers" }>Подписчики</RouteLink>
+                <RouteLink href={"/messages" }>Сообщения</RouteLink>
+                <p onClick={() => firebase.auth().signOut()} className={"link"}>Выйти</p>
               </Box>
             )
           }
@@ -481,5 +478,5 @@ class AccountPanel extends React.Component {
   }
 }
 
-export { RouteLink, Avatar, Box, EventRow };
+export { RouteLink, Box, EventRow };
 export default App;

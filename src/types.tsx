@@ -9,21 +9,21 @@ export interface ThreadGenerationProps { threadId: number }
 export interface ThreadMessageGenerationProps { messageId: number }
 export interface HeaderProps { user: firebase.User | null }
 export interface ErrorTextProps { errorCode: string }
-export interface AvatarProps { userId: string }
+export interface AvatarProps extends ClassNameable { userId: string }
 export interface RouteContentProps { url: string }
-export interface BoxProps {
+export interface ClassNameable { className?: string }
+export interface BoxProps extends ClassNameable {
   title: string,
-  isAsideBox: boolean
+  isAsideBox: boolean,
 }
 export interface EventRowProps {
   subject: firebase.User | string,
   predicate: string,
   object: string
 }
-export interface RouteLinkProps {
+export interface RouteLinkProps extends ClassNameable {
   href: string,
-  isButton: boolean,
-  className?: string
+  isButton?: boolean,
 }
 
 export interface NavbarLink {
