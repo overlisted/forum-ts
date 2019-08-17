@@ -5,7 +5,6 @@ export type Renderable = React.ReactElement<any, string | React.JSXElementConstr
 export interface RegisterPageProps { createUser: (email: string, password: string) => Promise<firebase.auth.UserCredential> }
 export interface LoginPageProps { signIn: (email: string, password: string) => Promise<firebase.auth.UserCredential> }
 export interface ThreadGenerationProps { threadId: number }
-export interface ThreadMessageGenerationProps { messageId: number }
 export interface ErrorTextProps { errorCode: number }
 export interface ContentRouterProps { url: string }
 export interface ClassNameable { className?: string }
@@ -16,7 +15,7 @@ export interface RouteRegisterable {
 
 export interface BoxProps extends ClassNameable {
   title: string,
-  isAsideBox: boolean,
+  asideBox?: boolean,
 }
 
 export interface EventRowProps {

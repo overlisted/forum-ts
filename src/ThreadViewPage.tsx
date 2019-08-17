@@ -2,7 +2,6 @@ import React from "react";
 import Markdown from "react-markdown";
 import {
   ThreadGenerationProps,
-  ThreadMessageGenerationProps
 } from './types';
 
 /** @deprecated */
