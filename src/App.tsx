@@ -1,25 +1,14 @@
 import React from 'react';
 // TODO: так как это движок форума, сделать настраиваемым
 import './default-style.css';
-import HomePage from './components/HomePage';
 import ThreadViewPage from './ThreadViewPage';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import 'firebase/storage'
-import autobind from 'autobind-decorator';
-import {
-  BoxProps,
-  MarkdownFormWithToolsProps,
-  NavbarLink,
-  Renderable,
-  EventRowProps,
-  RegisterPageProps,
-  LoginPageProps
-} from './types'
-import ContentRouter from "./router";
+import {BoxProps, LoginPageProps, NavbarLink, RegisterPageProps, Renderable} from './types'
+import ContentRouter, {Link} from "./router";
 import Error from './components/Error';
-import { go, Link} from './router'
 
 firebase.initializeApp({
   apiKey: "AIzaSyDXfBSMI1Hh3xOXBeEA-E0BjYeFm3xo_IM",
@@ -33,22 +22,6 @@ firebase.initializeApp({
 
 // @ts-ignore
 window.firebase = firebase;
-
-// TODO
-class MarkdownFormWithTools extends React.Component<MarkdownFormWithToolsProps> {
-  constructor(props: MarkdownFormWithToolsProps) {
-    super(props);
-    this.state = {}
-  }
-
-  render(): Renderable {
-    return(
-      <form onSubmit={() => this.props.onSubmit()}>
-
-      </form>
-    )
-  }
-}
 
 // TODO: так как это движок форума, сделать настраиваемым
 let navbarElements: NavbarLink[] = [
@@ -65,34 +38,6 @@ function signIn(email: string, password: string) {
 
 function createUser(email: string, password: string) {
   return firebase.auth().createUserWithEmailAndPassword(email, password)
-}
-
-class ThreadRow extends React.Component{
-  render(): Renderable {
-    return (
-      <div className="thread-row">
-        {this.props.children}
-      </div>
-    )
-  }
-}
-
-class EventRow extends React.Component<EventRowProps> {
-  render(): Renderable {
-    return (
-      <ThreadRow>
-        <p className={"event-row-title"}>
-          <b>{this.props.subject}</b>
-          <i> {this.props.predicate} </i>
-          <b>{this.props.object}</b>
-        </p>
-
-        <p className={"event-row-event-sample"}>
-          { this.props.children }
-        </p>
-      </ThreadRow>
-    );
-  }
 }
 
 class Box extends React.Component<BoxProps> {
@@ -414,5 +359,5 @@ class PersonalPanel extends React.Component {
   }
 }
 
-export { Box, EventRow };
+export { Box };
 export default App;
