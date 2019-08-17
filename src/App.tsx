@@ -6,8 +6,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import 'firebase/storage'
-import {BoxProps, LoginPageProps, NavbarLink, RegisterPageProps, Renderable} from './types'
-import ContentRouter, {Link} from "./router";
+import {BoxProps, Renderable} from './types'
+import ContentRouter from "./router";
 import Error from './components/Error';
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -33,7 +33,7 @@ class Box extends React.Component<BoxProps> {
           <p className="box-title">{this.props.title}</p>
         </div>
 
-        <div className={"box-contents " + this.props.className + " aside-box-" + this.props.isAsideBox}>
+        <div className={"box-contents " + (this.props.className ? this.props.className : "") + " aside-box-" + !!this.props.asideBox}>
           {this.props.children}
         </div>
       </div>

@@ -11,7 +11,7 @@ class Sidebar extends React.Component {
       // TODO: так как это движок форума, сделать настраиваемым
       <aside>
         <PersonalPanel/>
-        <Box title={"Последние статусы"} isAsideBox={true}>
+        <Box title={"Последние статусы"} asideBox={true}>
           <div className={"aside-content latest-statuses"}>
 
           </div>
@@ -165,18 +165,18 @@ class PersonalPanel extends React.Component {
           if(!context) {
             return(
               <>
-                <Box isAsideBox={true} title={"Вход"}>
+                <Box asideBox={true} title={"Вход"}>
                   <LoginForm signIn={signIn}/>
                 </Box>
 
-                <Box isAsideBox={true} title={"Регистрация"}>
+                <Box asideBox={true} title={"Регистрация"}>
                   <RegisterForm createUser={createUser}/>
                 </Box>
               </>
             )
           } else {
             return(
-              <Box isAsideBox={true} title={"Личный кабинет"} className={"personal-panel"}>
+              <Box asideBox={true} title={"Личный кабинет"} className={"personal-panel"}>
                 <div className={"personal-panel-title"}>
                   <img src={context.photoURL ? context.photoURL : undefined} className={"personal-panel-img"} alt={""}/>
                   <Link href={"/user/" + context.displayName} className={"personal-panel-username"}>{context.displayName}</Link>

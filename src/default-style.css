@@ -126,12 +126,7 @@ input[type="submit"] {
 }
 
 .error {
-  background: #1d1d1d;
-  height: 200px;
-}
-
-.error p {
-  margin: 0;
+  padding: 13px
 }
 
 .auth-error {
@@ -173,6 +168,10 @@ input[type="submit"] {
 .box-title-wrapper {
   display: flex;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+}
+
+.thread-row:last-child {
+  border-radius: 0 0 5px 5px;
 }
 
 .box-contents.aside-box-false {
@@ -233,6 +232,7 @@ input[type="submit"] {
 }
 
 .personal-panel {
+  width: Calc(100% - 36px) !important;
   padding: 13px;
 }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import {ErrorTextProps, Renderable} from "../types";
+import {Box} from "../App";
 
 const errorsHTTP = [
   {HTTP404: "Страница не найдена. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."}
@@ -14,17 +15,15 @@ const errorsTSF = [
 class Error extends React.Component<ErrorTextProps> {
   constructor(props: ErrorTextProps) {
     super(props);
-    console.error(this.props.errorCode, ": ", errorsTSF[this.props.errorCode])
+    console.error(this.props.errorCode + ": " + errorsTSF[this.props.errorCode])
   }
-
 
   render(): Renderable {
     return(
-      <div className="content error">
-        <p>Ошибка!</p>
+      <Box title={"Ошибка!"} className={"error"}>
         <p>Номер ошибки: {this.props.errorCode + 1}</p>
         <p>{errorsTSF[this.props.errorCode]}</p>
-      </div>
+      </Box>
     )
   }
 }
