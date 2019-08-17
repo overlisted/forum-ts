@@ -4,7 +4,7 @@ import { Avatar } from "./App";
 import {
   ThreadGenerationProps,
   ThreadMessageGenerationProps
-} from './interfaces';
+} from './types';
 
 class MessageAuthorPane extends React.Component<ThreadGenerationProps> {
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
