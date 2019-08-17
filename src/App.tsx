@@ -22,7 +22,7 @@ import {
   LoginPageProps
 } from './types'
 
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyDXfBSMI1Hh3xOXBeEA-E0BjYeFm3xo_IM",
   authDomain: "forum-ts.firebaseapp.com",
   databaseURL: "https://forum-ts.firebaseio.com",
@@ -30,9 +30,7 @@ const firebaseConfig = {
   storageBucket: "forum-ts.appspot.com",
   messagingSenderId: "149363423360",
   appId: "1:149363423360:web:db465a8af13e0eef"
-};
-
-firebase.initializeApp(firebaseConfig);
+});
 
 export function routeTo(href: string) {
   window.history.pushState({}, '', href);
@@ -193,42 +191,45 @@ class ErrorText extends React.Component<ErrorTextProps> {
 }
 
 const UserContext = React.createContext<firebase.User | null>(null);
-let App: React.FC = function() {
-  const [loading, setLoading] = React.useState(true);
-  const [url, setUrl] = React.useState(window.location.pathname);
-  const [user, setUser] = React.useState<firebase.User | null>(firebase.auth().currentUser);
+class App extends React.Component {
+  state = {
+    loading: true,
+    url: '',
+    user: null
+  };
 
-  React.useMemo(() => {
-    //@ts-ignore
-    window.document.addEventListener('tsf-route-change', (e: CustomEvent) => {
-      setUrl(e.detail);
+  routeChangeListener = (e: any): void => { this.setState({url: e.detail}) };
+
+  componentDidMount(): void {
+    window.document.addEventListener('tsf-route-change', this.routeChangeListener);
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) this.setState({loading: false});
+      this.setState({user: user});
     });
-  }, []);
+  }
 
-  React.useMemo(() => {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (loading) { setLoading(false); }
-      setUser(user);
-    });
-  }, [loading]);
+  componentWillUnmount(): void { window.document.removeEventListener('tsf-route-change', this.routeChangeListener) }
 
-  return (
+  render(): Renderable {
+    return (
       <div className="body">
-        {loading && 'Loading...'}
-        {!loading &&
-          <UserContext.Provider value={user}>
+        {this.state.loading && 'Loading...'}
+        {!this.state.loading &&
+          <UserContext.Provider value={this.state.user}>
             <Header/>
             <div className="body-wrapper">
               <div className={"main-boxes-column"}>
-              <RouteContent url={url}/>
+              <RouteContent url={this.state.url}/>
               </div>
               <Sidebar/>
             </div>
           </UserContext.Provider>
         }
       </div>
-  );
-};
+    );
+  }
+}
 
 class Header extends React.Component {
   render(): Renderable {
