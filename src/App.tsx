@@ -70,8 +70,8 @@ class App extends React.Component {
     window.document.addEventListener('tsf-route-change', this.routeChangeListener);
 
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) this.setState({loading: false});
       this.setState({user: user});
+      this.setState({loading: false});
     });
   }
 
@@ -79,6 +79,7 @@ class App extends React.Component {
 
   render(): Renderable {
     return (
+      <React.StrictMode>
       <div className="body">
         {this.state.loading && 'Loading...'}
         {!this.state.loading &&
@@ -93,6 +94,7 @@ class App extends React.Component {
           </UserContext.Provider>
         }
       </div>
+      </React.StrictMode>
     );
   }
 }
