@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "../App";
+import Box from "./Box";
 import {
   EventRowProps,
   Renderable
