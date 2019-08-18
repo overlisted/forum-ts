@@ -112,6 +112,28 @@ input[type="submit"] {
   height: 5px;
 }
 
+.loading-line {
+  background-color: var(--color-main);
+  height: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: 1800ms infinite alternate loading-line;
+  -moz-animation: 1800ms infinite alternate loading-line;
+  -webkit-animation: 1800ms infinite alternate loading-line;
+  -o-animation: 1800ms infinite alternate loading-line;
+}
+
+@keyframes loading-line {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%
+  }
+}
+
 .link {
   text-decoration: none;
 }
@@ -266,24 +288,4 @@ input[type="submit"] {
   display: flex;
   justify-content: left;
   align-items: center;
-}
-
-.loading {
-  position: absolute;
-  animation: 5s infinite alternate loading-slide;
-  font-size: 25px;
-  height: 33px;
-  top: Calc(50% - 33px);
-  width: 270px;
-  font-weight: bold;
-}
-
-@keyframes loading-slide {
-  from {
-    right: 100%;
-  }
-
-  to {
-    right: -14%;
-  }
 }
