@@ -228,6 +228,14 @@ input[type="submit"] {
   font-style: italic;
 }
 
+.titleless-box-contents {
+  border-radius: 5px !important;
+}
+
+.titleless-box-contents .thread-row:first-child {
+  border-radius: 5px;
+}
+
 .link:hover {
   text-decoration: underline;
 }
