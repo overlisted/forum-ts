@@ -22,6 +22,7 @@ body {
   background-attachment: fixed;
   background-position: bottom;
   background-size: cover;
+  overflow-x: hidden;
 }
 
 code {
@@ -257,4 +258,24 @@ input[type="submit"] {
   display: flex;
   justify-content: left;
   align-items: center;
+}
+
+.loading {
+  position: absolute;
+  animation: 5s infinite alternate loading-slide;
+  font-size: 25px;
+  height: 33px;
+  top: Calc(50% - 33px);
+  width: 270px;
+  font-weight: bold;
+}
+
+@keyframes loading-slide {
+  from {
+    right: 100%;
+  }
+
+  to {
+    right: -14%;
+  }
 }

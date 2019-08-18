@@ -81,7 +81,7 @@ class App extends React.Component {
     return (
       <React.StrictMode>
       <div className="body">
-        {this.state.loading && 'Loading...'}
+        {this.state.loading && <p className={"loading"}>Загружаем форум...</p>}
         {!this.state.loading &&
           <UserContext.Provider value={this.state.user}>
             <Header/>
