@@ -1,7 +1,7 @@
 import React from 'react';
 // TODO: так как это движок форума, сделать настраиваемым
 import './default-style.css';
-import ThreadViewPage from './ThreadViewPage';
+import ThreadViewPage from './components/ThreadViewPage';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
@@ -27,17 +27,39 @@ window.firebase = firebase;
 
 class Box extends React.Component<BoxProps> {
   render(): Renderable {
-    return(
-      <div className={"box"}>
-        <div className={"box-title-wrapper"}>
-          <p className="box-title">{this.props.title}</p>
-        </div>
+    if(this.props.title) {
+      return(
+        <div className={"box"}>
+          <div className={"box-title-wrapper"}>
+            <p className="box-title">{this.props.title}</p>
+          </div>
 
-        <div className={"box-contents " + (this.props.className ? this.props.className : "") + " aside-box-" + !!this.props.asideBox}>
-          {this.props.children}
+          <div
+            className={
+              "box-contents "
+              + (this.props.className ? this.props.className : "")
+              + " aside-box-" + !!this.props.asideBox
+            }
+          >
+            {this.props.children}
+          </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return(
+        <div className={"box titleless-box"}>
+          <div
+            className={
+              "box-contents titleless-box-contents "
+              + (this.props.className ? this.props.className : "")
+              + " aside-box-" + !!this.props.asideBox
+            }
+          >
+            {this.props.children}
+          </div>
+        </div>
+      )
+    }
   }
 }
 

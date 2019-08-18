@@ -14,7 +14,7 @@ export interface RouteRegisterable {
 }
 
 export interface BoxProps extends ClassNameable {
-  title: string,
+  title?: string,
   asideBox?: boolean,
 }
 

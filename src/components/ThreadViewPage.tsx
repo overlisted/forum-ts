@@ -2,7 +2,7 @@ import React from "react";
 import Markdown from "react-markdown";
 import {
   ThreadGenerationProps,
-} from './types';
+} from '../types';
 
 /** @deprecated */
 class MessageAuthorPane extends React.Component<ThreadGenerationProps> {
