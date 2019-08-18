@@ -6,7 +6,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
 import 'firebase/storage'
-import {BoxProps, Renderable} from './types'
+import {Renderable} from './types'
 import ContentRouter from "./router";
 import Error from './components/Error';
 import Header from "./components/Header";
@@ -24,44 +24,6 @@ firebase.initializeApp({
 
 // @ts-ignore
 window.firebase = firebase;
-
-class Box extends React.Component<BoxProps> {
-  render(): Renderable {
-    if(this.props.title) {
-      return(
-        <div className={"box"}>
-          <div className={"box-title-wrapper"}>
-            <p className="box-title">{this.props.title}</p>
-          </div>
-
-          <div
-            className={
-              "box-contents "
-              + (this.props.className ? this.props.className : "")
-              + " aside-box-" + !!this.props.asideBox
-            }
-          >
-            {this.props.children}
-          </div>
-        </div>
-      )
-    } else {
-      return(
-        <div className={"box titleless-box"}>
-          <div
-            className={
-              "box-contents titleless-box-contents "
-              + (this.props.className ? this.props.className : "")
-              + " aside-box-" + !!this.props.asideBox
-            }
-          >
-            {this.props.children}
-          </div>
-        </div>
-      )
-    }
-  }
-}
 
 const UserContext = React.createContext<firebase.User | null>(null);
 class App extends React.Component {
@@ -121,5 +83,5 @@ class App extends React.Component {
   }
 }
 
-export { Box, UserContext };
+export { UserContext };
 export default App;

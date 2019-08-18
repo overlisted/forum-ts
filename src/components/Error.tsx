@@ -1,6 +1,6 @@
 import React from "react";
 import {ErrorTextProps, Renderable} from "../types";
-import {Box} from "../App";
+import Box from "./Box";
 
 const errorsHTTP = [
   {HTTP404: "Страница не найдена. Если адрес страницы, на которой вы находитесь, писали не вы, обратитесь к администратору."}
