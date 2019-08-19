@@ -1,10 +1,10 @@
 // @ts-ignore
 import admin from "firebase-admin";
 import express from "express";
-const server = express();
+const app = express();
 // Вы должны скачать закрытый ключ по ссылке
 // console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk (выбрав там свой проект)
-// и переименовать скачанный файл в serviceAccount.json. Затем положите его по соседству с файлом server.ts.ts
+// и переименовать скачанный файл в serviceAccount.json. Затем положите его по соседству с файлом server.ts
 const serviceAccount = require('./serviceAccount.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -12,7 +12,7 @@ admin.initializeApp({
 });
 const jsonParser = express.json();
 
-server.post('/register', jsonParser, (req: express.Request, res: express.Response) => {
+app.post('/register', jsonParser, (req: express.Request, res: express.Response) => {
   if(req.body.username && req.body.email && req.body.password) {
     admin.auth().getUserByEmail(req.body.email)
       .then((userRecord: admin.auth.UserRecord) => {
@@ -43,7 +43,7 @@ server.post('/register', jsonParser, (req: express.Request, res: express.Respons
   }
 });
 
-server.use(express.static('./build'));
+app.use(express.static('./build'));
 
-server.listen(3002, () => {console.log("ы")});
+app.listen(3002, () => {console.log("ы")});
 

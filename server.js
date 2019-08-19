@@ -6,17 +6,17 @@ exports.__esModule = true;
 // @ts-ignore
 var firebase_admin_1 = __importDefault(require("firebase-admin"));
 var express_1 = __importDefault(require("express"));
-var server = express_1["default"]();
+var app = express_1["default"]();
 // Вы должны скачать закрытый ключ по ссылке
 // console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk (выбрав там свой проект)
-// и переименовать скачанный файл в serviceAccount.json. Затем положите его по соседству с файлом server.ts.ts
+// и переименовать скачанный файл в serviceAccount.json. Затем положите его по соседству с файлом server.ts
 var serviceAccount = require('./serviceAccount.json');
 firebase_admin_1["default"].initializeApp({
     credential: firebase_admin_1["default"].credential.cert(serviceAccount),
     databaseURL: "https://forum-ts.firebaseio.com"
 });
 var jsonParser = express_1["default"].json();
-server.post('/register', jsonParser, function (req, res) {
+app.post('/register', jsonParser, function (req, res) {
     if (req.body.username && req.body.email && req.body.password) {
         firebase_admin_1["default"].auth().getUserByEmail(req.body.email)
             .then(function (userRecord) {
@@ -46,5 +46,5 @@ server.post('/register', jsonParser, function (req, res) {
         res.send('JSON Fields "username", "email" and "password" not found.');
     }
 });
-server.use(express_1["default"].static('./build'));
-server.listen(3002, function () { console.log("ы"); });
+app.use(express_1["default"].static('./build'));
+app.listen(3002, function () { console.log("ы"); });
