@@ -54,6 +54,10 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       this.setState({user: user, loading: false});
     });
+
+    window.onpopstate = (e) => {
+      this.setState({url: window.location.pathname})
+    }
   }
 
   componentWillUnmount(): void { window.document.removeEventListener('tsf-route-change', this.routeChangeListener) }
