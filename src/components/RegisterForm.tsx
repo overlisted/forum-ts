@@ -25,9 +25,9 @@ class RegisterForm extends React.Component<RegisterPageProps> {
   handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (this.state.username.length > 14) {
+    if (this.state.username.length > 11) {
       this.clearErrors();
-      this.setState({error: {username: 'Максимальная длинна имени - 14 символов'}});
+      this.setState({error: {username: 'Максимальная длинна имени - 11 символов'}});
     } else if (this.state.password !== this.state.passwordRepeat) {
       this.clearErrors();
       this.setState({error: {passwordRepeat: 'Пароли не совпадают.'}});

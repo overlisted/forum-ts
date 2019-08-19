@@ -52,8 +52,7 @@ class App extends React.Component {
     window.document.addEventListener('tsf-route-change', this.routeChangeListener);
 
     firebase.auth().onAuthStateChanged((user) => {
-      this.setState({user: user});
-      this.setState({loading: false});
+      this.setState({user: user, loading: false});
     });
   }
 

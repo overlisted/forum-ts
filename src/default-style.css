@@ -272,9 +272,10 @@ input[type="submit"] {
 }
 
 .personal-panel-username {
-  font-size: 40px;
-  display: inline-block;
-  vertical-align: middle;
+  margin: 0 0 0 5px;
+  font-size: 25px;
+  line-height: 28px;
+  align-self: center;
 }
 
 .personal-panel-img {
@@ -288,4 +289,29 @@ input[type="submit"] {
   display: flex;
   justify-content: left;
   align-items: center;
+}
+
+.personal-panel-links a {
+  display: block;
+}
+
+.personal-panel-links {
+  margin: 8px 0 0 0;
+}
+
+.personal-panel-role {
+  line-height: 13px;
+  font-style: italic;
+  font-size: 12px;
+  align-self: start;
+  margin: 0 0 0 5px;
+}
+
+.personal-panel-role-secret-wrapper {
+  line-height: 13px;
+  font-style: italic;
+  font-size: 12px;
+  align-self: start;
+  margin: 0 0 0 5px;
+  opacity: 0;
 }
