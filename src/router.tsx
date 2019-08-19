@@ -21,8 +21,6 @@ class ContentRouter extends React.Component<ContentRouterProps> {
     routes.forEach((element: RouteRegisterable) => {
       RoutesRegistry.push(element)
     });
-
-    console.log(RoutesRegistry)
   }
 
   render(): Renderable {
