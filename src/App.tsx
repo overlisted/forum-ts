@@ -4,8 +4,6 @@ import './default-style.css';
 import ThreadViewPage from './components/ThreadViewPage';
 import firebase from "firebase/app";
 import "firebase/auth";
-import 'firebase/firestore';
-import 'firebase/storage'
 import {Renderable} from './types'
 import ContentRouter from "./router";
 import Error from './components/Error';

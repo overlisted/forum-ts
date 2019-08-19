@@ -24,32 +24,44 @@ class RegisterForm extends React.Component<RegisterPageProps> {
   handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      if(this.state.username.length > 14) {
-        this.clearErrors();
-        this.setState({error: {username: 'Максимальная длинна имени - 14 символов'}});
-      } else if(this.state.password !== this.state.passwordRepeat) {
-        this.clearErrors();
-        this.setState({error: {passwordRepeat: 'Пароли не совпадают.'}});
-      } else {
-        let newRegisteredUser = await this.props.createUser(this.state.email, this.state.password);
-        // некий "конструктор" пользователя после регистрации
-        if(newRegisteredUser.user) await newRegisteredUser.user.updateProfile({
-          displayName: this.state.username,
-          photoURL: "" // TODO: на бэкэнде возвращать аватарки
-        });
-      }
-    } catch(error) {
+    if (this.state.username.length > 14) {
       this.clearErrors();
-      if(error.code === 'auth/wrong-password') {
-        this.setState({error: {password: 'Пароль недостаточно надежный.'}});
-      } else if(error.code === 'auth/invalid-email') {
-        this.setState({error: {email: 'Адрес электронной почты введен или обработан не правильно.'}});
-      } else if(error.code === 'auth/email-already-in-use') {
-        this.setState({error: {email: 'Адрес электронной почты уже зарегестрирован.'}});
-      } else {
-        console.log(error.code, error.message);
-      }
+      this.setState({error: {username: 'Максимальная длинна имени - 14 символов'}});
+    } else if (this.state.password !== this.state.passwordRepeat) {
+      this.clearErrors();
+      this.setState({error: {passwordRepeat: 'Пароли не совпадают.'}});
+    } else {
+      fetch("http://" + window.location.hostname + ":3002/register/", {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        redirect: 'follow',
+        referrer: 'no-referrer',
+        body: JSON.stringify({username: this.state.username, email: this.state.email, password: this.state.password})
+      })
+        .then(response => {
+          response.json().then(data => {
+            if(data.error) {
+              this.clearErrors();
+              if (data.error.code === 'auth/wrong-password') {
+                this.setState({error: {password: 'Пароль недостаточно надежный.'}});
+              } else if (data.error.code === "forum-ts/username-already-in-use") {
+                this.setState({error: {username: 'Это имя пользователя уже зарегестрировано.'}});
+              } else if (data.error.code === 'auth/invalid-email') {
+                this.setState({error: {email: 'Адрес электронной почты введен или обработан не правильно.'}});
+              } else if (data.error.code === 'auth/email-already-in-use' || data.error.code === 'forum-ts/email-already-in-use') {
+                this.setState({error: {email: 'Адрес электронной почты уже зарегестрирован.'}});
+              }
+            }
+            console.log(data)
+          })
+        })
+
     }
   };
 
