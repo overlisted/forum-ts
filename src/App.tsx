@@ -55,7 +55,7 @@ class App extends React.Component {
       this.setState({user: user, loading: false});
     });
 
-    window.onpopstate = (e) => {
+    window.onpopstate = () => {
       this.setState({url: window.location.pathname})
     }
   }

@@ -42,12 +42,12 @@ class LoginForm extends React.Component<LoginPageProps> {
 
   render(): Renderable {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} autoComplete="on">
         <p>Адрес электронной почты</p>
-        <input name="email" type="email" autoComplete="on" required value={this.state.email} onChange={this.handleEmailChange}/>
+        <input name="email" type="email" required value={this.state.email} onChange={this.handleEmailChange}/>
         <p className={"auth-error"}>{this.state.error.email}</p>
         <p>Пароль</p>
-        <input name="password" type="password" autoComplete="on" required value={this.state.password} onChange={this.handlePasswordChange}/>
+        <input name="password" type="password" required value={this.state.password} onChange={this.handlePasswordChange}/>
         <p className={"auth-error"}>{this.state.error.password}</p>
         <input type="submit" className="button" value="Войти"/>
 
