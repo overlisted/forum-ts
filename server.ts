@@ -12,6 +12,8 @@ admin.initializeApp({
 });
 const jsonParser = express.json();
 
+const port = 80;
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -20,15 +22,17 @@ app.use(function(req, res, next) {
 
 app.post('/register', jsonParser, (req: express.Request, res: express.Response) => {
   res.header("Content-Type",'application/json');
-  console.log("[forum-ts server] [new user] Someone is trying to create an user...");
+  console.log("[forum-ts server] 1 | [new user] Someone is trying to create an user...");
   if(req.body.username && req.body.email && req.body.password) {
     admin.auth().getUserByEmail(req.body.email)
       .then((userRecord: admin.auth.UserRecord) => {
-        res.json({error: {code: "forum-ts/email-already-in-use", message: "Email is already in use."}});
+        res.json({error: {code: "auth/email-already-in-use", message: "Email is already in use."}});
+        console.log("[forum-ts server] 2 | [new user] Its email is already in use, throwing a error...\n");
       }).catch(error => {
       admin.auth().getUser(req.body.username)
         .then((userRecord: admin.auth.UserRecord) => {
           res.json({error: {code: "forum-ts/username-already-in-use", message: "Username is already in use."}});
+          console.log("[forum-ts server] 2 | [new user] Its username is already in use, throwing a error...\n");
         })
         .catch(error => {
           console.log(error);
@@ -39,20 +43,21 @@ app.post('/register', jsonParser, (req: express.Request, res: express.Response) 
             emailVerified: false
           })
             .then((userRecord: admin.auth.UserRecord) => {
-              res.sendStatus(200);
-              console.log("new user added:", userRecord)
+              res.json({success: true});
+              console.log("[forum-ts server] 2 | [new user] New user created.\n", userRecord.uid);
             })
             .catch(error => {
-              console.log("couldn't create new user:", error);
+              console.log("[forum-ts server] [ERROR] 2 | [new user] Couldn't create a user, throwing a error...\n", error);
               res.json(error)
           })
         });
     });
   } else {
-    res.json('forum-ts/json-properties-does-not-exist')
+    res.json('forum-ts/json-properties-does-not-exist');
+    console.log("[forum-ts server] 2 | [ERROR] [new user] Request is missing some properties.\n");
   }
 });
 
 app.use(express.static('./build'));
 
-app.listen(3002, () => {console.log("ы")});
+app.listen(port, () => {console.log("[forum-ts server] 1 | [routing] Listening to the", port, "port\n")});

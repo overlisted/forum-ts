@@ -1,5 +1,6 @@
 import React from "react";
 import {RegisterPageProps, Renderable} from "../types";
+import firebase from "firebase";
 
 class RegisterForm extends React.Component<RegisterPageProps> {
   state = {
@@ -31,7 +32,7 @@ class RegisterForm extends React.Component<RegisterPageProps> {
       this.clearErrors();
       this.setState({error: {passwordRepeat: 'Пароли не совпадают.'}});
     } else {
-      fetch("http://" + window.location.hostname + ":3002/register/", {
+      fetch("http://" + window.location.hostname + "/register/", {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -54,11 +55,12 @@ class RegisterForm extends React.Component<RegisterPageProps> {
                 this.setState({error: {username: 'Это имя пользователя уже зарегестрировано.'}});
               } else if (data.error.code === 'auth/invalid-email') {
                 this.setState({error: {email: 'Адрес электронной почты введен или обработан не правильно.'}});
-              } else if (data.error.code === 'auth/email-already-in-use' || data.error.code === 'forum-ts/email-already-in-use') {
+              } else if (data.error.code === 'auth/email-already-in-use') {
                 this.setState({error: {email: 'Адрес электронной почты уже зарегестрирован.'}});
               }
+            } else if(data.success) {
+              firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             }
-            console.log(data)
           })
         })
 
