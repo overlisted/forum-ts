@@ -69,18 +69,18 @@ class RegisterForm extends React.Component<RegisterPageProps> {
 
   render(): Renderable {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} autoComplete={"off"}>
         <p>Имя пользователя</p>
-        <input name="username" autoComplete="off" required value={this.state.username} onChange={this.handleUsernameChange}/>
+        <input name="username" required value={this.state.username} onChange={this.handleUsernameChange}/>
         <p className={"auth-error"}>{this.state.error.username}</p>
         <p>Адрес электронной почты</p>
-        <input name="email" type="email" autoComplete="off" required value={this.state.email} onChange={this.handleEmailChange}/>
+        <input name="email" type="email" required value={this.state.email} onChange={this.handleEmailChange}/>
         <p className={"auth-error"}>{this.state.error.email}</p>
         <p>Пароль</p>
-        <input name="password" type="password" autoComplete="off" required value={this.state.password} onChange={this.handlePasswordChange}/>
+        <input name="password" type="password" required value={this.state.password} onChange={this.handlePasswordChange}/>
         <p className={"auth-error"}>{this.state.error.password}</p>
         <p>Повторите пароль</p>
-        <input name="passwordRepeat" type="password" autoComplete="off" required value={this.state.passwordRepeat} onChange={this.handlePasswordRepeatChange}/>
+        <input name="passwordRepeat" type="password" required value={this.state.passwordRepeat} onChange={this.handlePasswordRepeatChange}/>
         <p className={"auth-error"}>{this.state.error.passwordRepeat}</p>
         <input type="submit" className="button" value="Зарегистрироваться"/>
       </form>
