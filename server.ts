@@ -14,14 +14,18 @@ const jsonParser = express.json();
 
 const port = 80;
 
+let db = admin.firestore();
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
+//
+// обработка регистрации
+//
 app.post('/register', jsonParser, (req: express.Request, res: express.Response) => {
-  res.header("Content-Type",'application/json');
   console.log("[forum-ts server] 1 | [new user] Someone is trying to create an user...");
   if(req.body.username && req.body.email && req.body.password) {
     admin.auth().getUserByEmail(req.body.email)
@@ -58,6 +62,105 @@ app.post('/register', jsonParser, (req: express.Request, res: express.Response) 
   }
 });
 
+//
+// раздача статики
+//
 app.use(express.static('./build'));
+
+//
+// обработка прочтения треда
+//
+app.post("/readThread", jsonParser, (req: express.Request, res: express.Response) => {
+  console.log("[forum-ts server] 1 | [read thread] Someone is trying to read a thread...");
+  db.collection("threads").doc(req.body.threadId).get()
+    .then(snapshot => {
+      if(!snapshot.data()) {
+        console.log("[forum-ts server] 2 | [ERROR] [read thread] Thread doesn't exist.");
+        res.json({error: "Thread doesn't exist."});
+      } else {
+        console.log('[forum-ts server] 2 | [read thread]', snapshot.id, snapshot.data());
+        res.json(snapshot.data())
+      }
+    })
+    .catch(e => {
+      console.log('[forum-ts server] 2 | [ERROR] [read thread]', e);
+      res.json({error: e});
+    });
+});
+
+
+//
+// обработка прочтения сообщения под тредом
+//
+app.post("/readMessage", jsonParser, (req: express.Request, res: express.Response) => {
+  console.log("[forum-ts server] 1 | [read message] Someone is trying to read a message...");
+  db.collection("threads").doc(req.body.threadId).collection("messages").doc(req.body.messageId).get()
+    .then(snapshot => {
+      if(!snapshot.data()) {
+        console.log("[forum-ts server] 2 | [ERROR] [read message] Message doesn't exist.");
+        res.json({error: "Message doesn't exist."});
+      } else {
+        console.log('[forum-ts server] 2 | [read message]', snapshot.id, snapshot.data());
+        res.json(snapshot.data())
+      }
+    })
+    .catch(e => {
+      console.log('[forum-ts server] 2 | [ERROR] [read message]', e);
+      res.json({error: e});
+    });
+});
+
+//
+// обработка написания треда
+//
+app.post("/writeThread", jsonParser, (req: express.Request, res: express.Response) => {
+  console.log("[forum-ts server] 1 | [write thread] Someone is trying to write a thread...");
+  db.collection("threads").add({
+    title: req.body.title,
+    author: req.body.author
+  })
+    .then(ref => {
+      console.log("[forum-ts server] 2 | [write thread] Wrote a thread, writing a message...");
+      ref.collection("messages").add({
+        author: req.body.author,
+        contents: req.body.contents
+      })
+        .then(doc => {
+          console.log("[forum-ts server] 3 | [write thread] [write message] Wrote a message...\n");
+          res.status(200);
+        })
+        .catch(e => {
+          console.log("[forum-ts server] 3 | [ERROR] [write thread] [write message]", e, "\n");
+          res.json({error: e});
+        })
+      })
+    .catch(e => {
+      console.log("[forum-ts server] 2 | [ERROR] [write thread]", e, "\n");
+      res.json({error: e});
+    })
+});
+
+//
+// обработка написания сообщения под тредом
+//
+app.post("/writeMessage", jsonParser, (req: express.Request, res: express.Response) => {
+  console.log("[forum-ts server] 1 | [write message] Someone is trying to write a message...");
+  if(db.collection("threads").doc(req.body.thread)) {
+    console.log("[forum-ts server] 2 | [ERROR] [write message] Thread doesn't exist");
+    res.json({error: "Thread doesn't exist"});
+  } else {
+    db.collection("threads").doc(req.body.thread).collection("messages").add({
+      author: req.body.author,
+      contents: req.body.contents
+    })
+      .then(ref => {
+        console.log("[forum-ts server] 2 | [write message] Wrote a message:", ref.get().then(snapshot => snapshot.data()));
+      })
+      .catch(e => {
+        console.log("[forum-ts server] 2 | [ERROR] [write message]", e);
+        res.json({error: e});
+      })
+  }
+});
 
 app.listen(port, () => {console.log("[forum-ts server] 1 | [routing] Listening to the", port, "port\n")});
